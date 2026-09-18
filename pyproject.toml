@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "biodockify-vina"
-version = "0.1.0"
+version = "0.1.1"
 description = "Single-molecule docking workflow using AutoDock Vina"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -43,15 +43,22 @@ dev = [
     "twine>=5.0.0"
 ]
 
+[project.scripts]
+biodockify-vina = "biodockify_vina.cli:main"
+
 [project.urls]
 Homepage = "https://www.biodockify.com/"
 Documentation = "https://www.biodockify.com/docs"
 Repository = "https://github.com/tajo9128/biodockify-vina"
 Issues = "https://github.com/tajo9128/biodockify-vina/issues"
 "Online Docking" = "https://www.biodockify.com/molecular-docking-online"
+Changelog = "https://github.com/tajo9128/biodockify-vina/blob/main/CHANGELOG.md"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+biodockify_vina = ["py.typed"]
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]

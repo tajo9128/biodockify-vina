@@ -1,0 +1,16 @@
+REMARK  Name = sample_ligand.pdbqt
+REMARK  BioDockify Sample Ligand (https://www.biodockify.com)
+REMARK  2 active torsions:
+ROOT
+ATOM      1  C1  LIG     1      14.230  21.450  11.890  1.00  0.00     0.050 C 
+ATOM      2  C2  LIG     1      15.420  21.120  12.750  1.00  0.00     0.050 C 
+ATOM      3  O1  LIG     1      16.580  21.850  12.420  1.00  0.00    -0.550 OA
+ATOM      4  N1  LIG     1      15.250  20.010  13.680  1.00  0.00    -0.350 NA
+ATOM      5  HN1 LIG     1      14.390  19.520  13.820  1.00  0.00     0.150 HD
+ENDROOT
+BRANCH   1   6
+ATOM      6  C3  LIG     1      13.010  22.150  12.480  1.00  0.00     0.050 C 
+ATOM      7  O2  LIG     1      12.120  22.580  11.750  1.00  0.00    -0.550 OA
+ATOM      8  HO2 LIG     1      11.350  22.950  12.180  1.00  0.00     0.200 HD
+ENDBRANCH   1   6
+TORSDOF 2

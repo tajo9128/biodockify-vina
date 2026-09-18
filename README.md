@@ -5,9 +5,9 @@
 [![Python Versions](https://img.shields.io/pypi/pyversions/biodockify-vina.svg)](https://pypi.org/project/biodockify-vina/)
 [![Platform](https://img.shields.io/badge/BioDockify-Platform-blue)](https://www.biodockify.com/)
 
-**`biodockify-vina`** provides a clean, standalone Python workflow for single-molecule molecular docking using [AutoDock Vina](https://vina.scripps.edu/).
+**`biodockify-vina`** provides a clean, robust, and standalone Python workflow & CLI for single-molecule molecular docking using [AutoDock Vina](https://vina.scripps.edu/).
 
-Developed and maintained by the **[BioDockify](https://www.biodockify.com/)** team, this package packages the battle-tested single-docking execution, bounding box generation, and output parsing engine from the BioDockify computational drug discovery platform.
+Developed and maintained by the **[BioDockify](https://www.biodockify.com/)** team, this package encapsulates the battle-tested single-docking execution, automatic bounding box calculation, multi-model coordinate parsing, and energy extraction engine from the BioDockify computational drug discovery platform.
 
 ---
 
@@ -38,6 +38,11 @@ Developed and maintained by the **[BioDockify](https://www.biodockify.com/)** te
 - **Direct Binary Download**:
   Download the official pre-compiled binary for Windows, macOS, or Linux from the [Center for Computational Structural Biology (CCSB)](https://vina.scripps.edu/downloads/) and add `vina` to your system `PATH`.
 
+You can verify your Vina installation at any time:
+```bash
+biodockify-vina --check-vina
+```
+
 ---
 
 ## 🚀 Installation
@@ -48,7 +53,34 @@ pip install biodockify-vina
 
 ---
 
-## ⚡ Quick Start
+## 💻 Command-Line Interface (CLI)
+
+`biodockify-vina` includes a full-featured CLI:
+
+### 1. Basic Docking Run
+```bash
+biodockify-vina \
+  --receptor examples/data/sample_receptor.pdbqt \
+  --ligand examples/data/sample_ligand.pdbqt \
+  --center 15.5 20.7 12.0 \
+  --size 20.0 20.0 20.0 \
+  --exhaustiveness 8 \
+  --save-best top_pose.pdbqt
+```
+
+### 2. Automated Search Box Detection (`--auto-box`)
+Automatically compute the pocket centroid and search dimensions directly from receptor coordinates:
+```bash
+biodockify-vina \
+  -r examples/data/sample_receptor.pdbqt \
+  -l examples/data/sample_ligand.pdbqt \
+  --auto-box \
+  --json
+```
+
+---
+
+## ⚡ Python API Quick Start
 
 ### 1. Basic Docking Run
 
@@ -77,16 +109,17 @@ for pose in result.poses:
 
 # Save top-ranked pose
 result.save_best_pose("best_docked_pose.pdbqt")
+
+# Export to JSON
+print(result.to_json(indent=2))
 ```
 
 ### 2. Automatic Grid Box Calculation
 
-You can automatically calculate the optimal search box center and dimensions directly from a receptor structure:
-
 ```python
 from biodockify_vina import VinaDocking, DockingConfig
 
-# Automatically compute grid center and bounding dimensions
+# Automatically compute grid center and bounding dimensions from receptor structure
 config = DockingConfig.auto_box_from_structure("receptor.pdbqt", margin=8.0)
 
 docking = VinaDocking(
@@ -115,14 +148,17 @@ print(f"Docked with auto-box center {config.center} and size {config.size}")
 | `seed` | `int` | `42` | Random seed for reproducible docking results |
 | `cpu` | `int` | `None` | Number of CPU cores to utilize (default: auto-detect all available) |
 | `timeout_seconds`| `int` | `600` | Maximum execution time in seconds before raising `VinaTimeoutError` |
+| `vina_executable`| `str` | `None` | Path to custom AutoDock Vina binary |
 
 ---
 
 ## 🧪 Output Description
 
 The `DockingResult` object contains:
+- `status`: Execution status (`complete` or `error`).
 - `best_affinity`: Top binding affinity in kcal/mol (most negative score).
-- `poses`: List of `DockingPose` objects containing mode number, affinity score, RMSD lower/upper bounds, and isolated PDBQT coordinate blocks.
+- `num_poses`: Number of generated binding poses.
+- `poses`: List of `DockingPose` objects containing `mode`, `affinity`, `rmsd_lb`, `rmsd_ub`, and `pdbqt_content`.
 - `output_pdbqt_path`: Path to the generated multi-model PDBQT output file.
 - `log_text`: Full stdout log from the AutoDock Vina run.
 - `execution_time_seconds`: Total wall-clock time consumed by the docking computation.
@@ -137,7 +173,7 @@ Clone the repository and install development dependencies:
 git clone https://github.com/tajo9128/biodockify-vina.git
 cd biodockify-vina
 pip install -e ".[dev]"
-pytest
+pytest -v
 ```
 
 ---

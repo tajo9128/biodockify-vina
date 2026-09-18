@@ -8,7 +8,7 @@ Developed by the BioDockify Team (https://www.biodockify.com).
 
 from .models import DockingPose, DockingResult
 from .config import DockingConfig
-from .docking import VinaDocking, find_vina_executable, parse_vina_energy_table
+from .docking import VinaDocking, find_vina_executable, parse_vina_energy_table, parse_docked_pdbqt_models
 from .exceptions import (
     BiodockifyVinaError,
     VinaExecutableNotFoundError,
@@ -18,7 +18,7 @@ from .exceptions import (
     VinaParseError,
 )
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 __author__ = "BioDockify Team"
 __all__ = [
     "VinaDocking",
@@ -27,6 +27,7 @@ __all__ = [
     "DockingPose",
     "find_vina_executable",
     "parse_vina_energy_table",
+    "parse_docked_pdbqt_models",
     "BiodockifyVinaError",
     "VinaExecutableNotFoundError",
     "VinaExecutionError",

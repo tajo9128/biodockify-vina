@@ -39,6 +39,19 @@ def test_parse_vina_energy_table():
     assert entries[1]["mode"] == 2
     assert entries[1]["affinity"] == -8.2
     assert entries[1]["rmsd_lb"] == 1.452
+    assert entries[1]["rmsd_ub"] == 2.103
+    assert entries[2]["mode"] == 3
+    assert entries[2]["affinity"] == -7.9
+
+
+def test_parse_vina_empty_output():
+    entries = parse_vina_energy_table("")
+    assert entries == []
+
+
+def test_parse_vina_malformed_output():
+    entries = parse_vina_energy_table("Some random text without table")
+    assert entries == []
 
 
 def test_parse_docked_pdbqt_models():
@@ -46,3 +59,15 @@ def test_parse_docked_pdbqt_models():
     assert len(models) == 2
     assert "MODEL 1" in models[0]
     assert "MODEL 2" in models[1]
+
+
+def test_parse_single_model_pdbqt():
+    single = "ATOM      1  C1  LIG L   1      10.123  20.456  30.789  0.00  0.00    +0.05 C \n"
+    models = parse_docked_pdbqt_models(single)
+    assert len(models) == 1
+    assert "ATOM" in models[0]
+
+
+def test_parse_empty_pdbqt():
+    models = parse_docked_pdbqt_models("")
+    assert models == []
